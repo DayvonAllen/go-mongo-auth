@@ -18,6 +18,7 @@ type UserRepoImpl struct {
 var dbConnection = database.GetInstance()
 
 func (u UserRepoImpl) Create(user *domain.User) error {
+	user.Id = primitive.NewObjectID()
 	_, err := dbConnection.Collection.InsertOne(context.TODO(), &user)
 	if err != nil {
 		log.Fatal(err)
