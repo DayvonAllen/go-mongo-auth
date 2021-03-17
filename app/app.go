@@ -14,7 +14,8 @@ func Start() {
 	router := mux.NewRouter()
 
 	// wiring everything up
-	ch := Handlers{userService: services.NewUserService(repo.NewUserRepoImpl())}
+	ch := Handlers{userService: services.NewUserService(repo.NewUserRepoImpl()),
+		authService: services.NewAuthService(repo.NewAuthRepoImpl())}
 
 	router.HandleFunc("/users", ch.getAllUsers).Methods(http.MethodGet)
 	router.HandleFunc("/users", ch.CreateUser).Methods(http.MethodPost)

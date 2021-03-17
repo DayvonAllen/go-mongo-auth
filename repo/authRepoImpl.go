@@ -13,21 +13,25 @@ type AuthRepoImpl struct {
 	*domain.User
 }
 
-func Login(username, password string) (*domain.User, string, error) {
+func(a AuthRepoImpl) Login(email, password string) (*domain.User, string, error) {
 	var login domain.Authentication
 	var user domain.User
 	opts := options.FindOne()
-	_ = dbConnection.Collection.FindOne(context.TODO(), bson.D{{"USERNAME", username}},opts).Decode(&user)
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	_ = dbConnection.Collection.FindOne(context.TODO(), bson.D{{"email", email}},opts).Decode(&user)
 
-	if err != nil {
-		panic(err)
-	}
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 
-	if string(hashedPassword) == user.Password {
+
+	if err == nil {
 		token, _ := login.GenerateJWT(user)
 		return &user, token, nil
 	}
 
 	return nil, "", fmt.Errorf("error logging in")
+}
+
+func NewAuthRepoImpl() AuthRepoImpl {
+	var authRepoImpl AuthRepoImpl
+
+	return authRepoImpl
 }

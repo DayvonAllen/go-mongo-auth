@@ -3,7 +3,7 @@ package domain
 import (
 	"crypto/hmac"
 	"crypto/rand"
-	"crypto/sha512"
+	"crypto/sha256"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -54,7 +54,7 @@ func (l Authentication) GenerateJWT(msg User) (string, error){
 func (l Authentication) SignToken(token []byte) ([]byte, error) {
 	// second arg is a private key, key needs to be the same size as hasher
 	// sha512 is 64 bits
-	h := hmac.New(sha512.New, []byte("hello_world"))
+	h := hmac.New(sha256.New, newKey)
 
 	// hash is a writer
 	_, err := h.Write(token)

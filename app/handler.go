@@ -132,7 +132,7 @@ func (ch *Handlers) Login(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &c)
 
-	err = json.NewEncoder(w).Encode(u)
+	err = json.NewEncoder(w).Encode(&u)
 	if err != nil {
 		http.Error(w, "Server error", http.StatusInternalServerError)
 		return
